@@ -1,0 +1,103 @@
+<                                Java                           >
+import java.io.*; 
+import java.util.*; 
+ class LowerCaseInputStream extends FilterInputStream 
+ { 
+ public LowerCaseInputStream(InputStream in) { 
+ super(in); 
+ } 
+ public int read() throws IOException { 
+ int c = super.read(); 
+ return (c == -1 ? c : Character.toLowerCase((char)c)); 
+ } 
+ public int read(byte[] b, int offset, int len) throws IOException { 
+ int result = super.read(b, offset, len); 
+ for (int i = offset; i < offset+result; i++) { 
+ b[i] = (byte)Character.toLowerCase((char)b[i]); 
+ } 
+ return result; 
+ } 
+} 
+public class Main { 
+ public static void main(String[] args) throws IOException { 
+ int c; 
+ try { 
+ InputStream in = 
+ new LowerCaseInputStream( 
+ new BufferedInputStream( 
+ new FileInputStream("test.txt"))); 
+ while((c = in.read()) >= 0) { 
+ System.out.print((char)c); 
+ } 
+ in.close(); 
+ } catch (IOException e) { 
+ e.printStackTrace(); 
+ } 
+ }
+ }
+ 
+ ..............ML.....................
+ 
+ # Implement Decision Tree Regression  to predict the salary of an employee 
+# according to an unknown level
+import numpy as np  
+import matplotlib.pyplot as plt  
+import pandas as pd  
+  
+#importing datasets  
+data_set= pd.read_csv('Position_Salaries.csv')  
+  
+#Extracting Independent and dependent Variable dependent(Y) and independent variable(X) from the dataset 
+x= data_set.iloc[:, 1:2].values  
+y= data_set.iloc[:, 2].values 
+
+# Splitting the dataset into training and test set.  
+from sklearn.model_selection import train_test_split  
+x_train, x_test, y_train, y_test= train_test_split(x, y, test_size= 0.2, random_state=0)  
+
+
+# Fitting Decision Tree Regression to the dataset
+from sklearn.tree import DecisionTreeRegressor
+regressor = DecisionTreeRegressor(random_state=0)
+regressor.fit(x_train, y_train)
+
+pred = regressor.predict(x_test)
+print('Pred x-test',pred)
+from sklearn import metrics
+
+r_square = metrics.r2_score(y_test,pred)
+
+print('Accuracy of Model is ',r_square)
+
+new_price_pred = regressor.predict([[6.5]])
+print('The Salary of Level 6.5 is  is  ',new_price_pred)
+
+# Visualizing the Decision Tree Regression 
+# by creating range of values from min value of 
+# x_train to max value of x_train having a 
+# difference of 0.01 between two Consecutive values
+X_grid = np.arange(min(x_train), max(x_train),0.01)
+print(len(X_grid))
+
+#Reshape the data into a len(X_grid)*1 array in order
+# to make a column out of X_grid values
+X_grid = X_grid.reshape((len(X_grid), 1))
+plt.scatter(x_train, y_train, color = 'red')
+plt.plot(X_grid, regressor.predict(X_grid), color = 'blue')
+#plt.plot(x_train, regressor.predict(x_train), color = 'blue')
+
+plt.title('Decision Tree Regression')
+plt.xlabel('Position level')
+plt.ylabel('Salary')
+plt.show()
+
+from sklearn.tree import export_graphviz
+
+export_graphviz(regressor,out_file='dtregression1.dot',feature_names =['Level'])
+ 
+ 
+ 
+ 
+ 
+ 
+ ...............web framework...................
